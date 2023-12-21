@@ -32,7 +32,7 @@ string getLCS(string& str1,string& str2) {
                  }
              } else {
                   indexs[i][j] = 0;
-              }
+             }
             if(maxLen < indexs[i][j]) {
                 maxLen = indexs[i][j];
                 maxIdx = i;
