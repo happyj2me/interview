@@ -53,8 +53,7 @@ void calPairedNumbers(void* param) {
 
 }
 
-int main(int argc, char const *argv[])
-{
+void TestPairedNumber() {
     std::chrono::steady_clock::time_point timeStart = std::chrono::steady_clock::now();
     int32_t threadNum = std::thread::hardware_concurrency();
     int64_t totalTask = 987654321;
@@ -87,5 +86,10 @@ int main(int argc, char const *argv[])
     std::chrono::steady_clock::time_point timeEnd = std::chrono::steady_clock::now();
     auto totalCost = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd-timeStart);
     std::cout << "total " << total <<",cost " << totalCost.count() << std::endl;
+}
+
+int main(int argc, char const *argv[])
+{
+    TestPairedNumber();
     return 0;
 }
