@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
        std::cout << item.second << std::endl;
    }
     std::cout << "A and B is created" << std::endl;
-    auto aa = std::make_unique<A>();
+    auto aa = std::make_shared<A>();
     auto bb = std::make_shared<B>();
     aa->mb = bb;
     std::cout << "A and B is destroyed" << std::endl;

@@ -3,7 +3,7 @@
 #include <list>
 #include <queue>
 #include <vector>
-
+#include <algorithm>
 /**
  *    已知先序遍历和中序遍历,构造二叉树
  *    思路:

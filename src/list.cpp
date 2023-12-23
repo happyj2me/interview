@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <set>
+#include <unordered_set>
 
 using namespace std;
 typedef struct  listNode
@@ -78,60 +78,100 @@ void removeDupNodesFromSortedListB(mylist* head) {
     }
 }
 
-void removeDupNodesFromTwoList(mylist* headA,mylist* headB) {
-    if(nullptr == headA || nullptr == headB) {
+void removeFromListByValue(mylist* &head,int value) {
+    if(head == nullptr) {
         return;
     }
-    listNode* p = headA;
-    listNode* q;
-    listNode* n;
-    while(p) {
-        //遍历B队列
-        q = headB;
-        while(q && q->value != p->value)q=q->next;
-        
-        //没找到一样的元素
-        if(q == nullptr) {
-            p = p->next;
-        } else {
-            int value = q->value;
-            //从A队列删除等于value的所有节点
-            n = p;
-            while(n) {
-                if(n->value == value) {
-                    if(n == headA) {
-                        
-                    } else {
-
-                    }
-                } else {
-                    n = n->next;
+    listNode* curNode = head;
+    while(curNode) {
+        if(curNode->value == value) {
+            if(curNode == head) {
+                head = curNode->next;
+            } else {
+                if(curNode->next) {
+                    curNode->next->pre = curNode->pre;
+                }
+                if(curNode->pre) {
+                    curNode->pre->next = curNode->next;
                 }
             }
-            //从B队列删除等于的所有节点
+            listNode* tmp = curNode;
+            curNode = curNode->next;
+            delete tmp;
+        } else {
+            curNode = curNode->next;
         }
     }
+}
+
+void findCommonValuesFromTowList(
+            const mylist* listA,
+            const mylist* listB,
+            std::unordered_set<int>& values) {
+    if(listA == nullptr || listB == nullptr) {
+        return;
+    }
+    std::unordered_set<int> uniqueValuesInAList;
+    const listNode* curNode = listA;
+    while(curNode) {
+        uniqueValuesInAList.insert(curNode->value);
+        curNode = curNode->next;
+    }
+    curNode = listB;
+    while(curNode) {
+        if(uniqueValuesInAList.find(curNode->value) != uniqueValuesInAList.end()) {
+            values.insert(curNode->value);
+        }
+        curNode = curNode->next;
+    }
+}
+
+void removeCommonValuesFromTowList(mylist* &listA,mylist* &listB) {
+    if(listA == nullptr || listB == nullptr) {
+        return;
+    }
+    std::cout << "before remove:" << std::endl;
+    dumpList(listA);
+    dumpList(listB);
+    std::unordered_set<int> values;
+    findCommonValuesFromTowList(listA,listB,values);
+    if(values.size() != 0) {
+        for(auto& value : values) {
+            removeFromListByValue(listA,value);
+            removeFromListByValue(listB,value);
+        }
+    }
+    std::cout << "after remove:" << std::endl;
+    dumpList(listA);
+    dumpList(listB);
 }
 
 int main(int argc,char *argv[]) {
     listNode* a = new listNode(1);
     listNode* b = new listNode(2);
     listNode* c = new listNode(3);
-    listNode* d = new listNode(4);
-    listNode* e = new listNode(4);
-    listNode* f = new listNode(4);
+
+    listNode* d = new listNode(3);
+    listNode* e = new listNode(3);
+    listNode* f = new listNode(3);
+
     a->next = b;
     b->next = c;
-    c->next = d;
+    c->pre = b;
+    b->pre = a;
+
     d->next = e;
     e->next = f;
+    f->pre = e;
+    e->pre = d;
     
-    mylist* my = a;
-    dumpList(my);
-    removeDupNodesFromSortedListA(my);
+    mylist* listA = a;
+    mylist* listB = d;
+
+    removeCommonValuesFromTowList(listA,listB);
+    //removeDupNodesFromSortedListA(my);
     //removeDupNodesFromSortedListB(my);
     //removeDupNodesFromUnSortedList(my);
-    dumpList(my);
 
     return 0;
 }
